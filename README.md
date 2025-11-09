@@ -482,23 +482,3 @@ tests/test_queue.py ...............                                      [100%]
 ============================== 15 passed in 2.34s ===============================
 ```
 
-## Demo Video
-
-A demonstration video showing QueueCTL in action will be available at:
-
-[Demo Video Link - To Be Added]
-
-### Recording the Demo
-
-To record a demo video, showcase the following features:
-
-1. **Initialization:** Run `queuectl init` and show the created directory structure
-2. **Worker Management:** Start workers with `worker start --count 3`, show them running, then stop with `worker stop`
-3. **Job Enqueueing:** Demonstrate both simple string and JSON formats
-4. **Job Processing:** Show jobs being processed by workers in real-time
-5. **Status and Listing:** Use `status` and `list` commands to show queue state
-6. **Retry Logic:** Enqueue a failing job and show exponential backoff retries
-7. **DLQ Operations:** Show jobs moving to DLQ and retry functionality
-8. **Configuration:** Demonstrate `config set` and `config get` commands
-
-Recommended tools: asciinema, OBS Studio, or any screen recording software that captures terminal output clearly.
