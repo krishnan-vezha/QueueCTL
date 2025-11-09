@@ -13,42 +13,43 @@ A CLI-based background job queue system with worker processes, exponential backo
 - **Comprehensive logging** - Track all job operations and worker activities
 
 ## Architecture
-┌─────────────┐
-│    CLI      │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐        ┌──────────────┐        ┌─────────────────┐
-│  Job Queue  │  ───▶  │   Workers    │  ───▶  │ Worker Registry │
-│  (SQLite)   │        │ (Processes)  │        │    (JSON)       │
-└─────────────┘        └──────┬───────┘        └─────────────────┘
+      ┌─────────────┐
+      │    CLI      │
+      └──────┬──────┘
+             │
+             ▼
+      ┌─────────────┐        ┌──────────────┐        ┌─────────────────┐
+      │  Job Queue  │  ───▶  │   Workers    │  ───▶  │ Worker Registry │
+      │  (SQLite)   │        │ (Processes)  │        │    (JSON)       │
+      └─────────────┘        └──────┬───────┘        └─────────────────┘
+                                   │
+                                   ▼
+                           ┌─────────────┐
+                           │  Execute    │
+                           │  Commands   │
+                           └──────┬──────┘
+                                  │
+                          ┌───────▼───────┐
+                          │   Success?    │
+                          └────┬────┬─────┘
+                               │    │
+                            Yes│    │No
+                               ▼    ▼
+                       ┌──────────────┐
+                       │    Retry     │
+                       │ (Backoff)    │
+                       └──────┬───────┘
                               │
-                              ▼
-                      ┌─────────────┐
-                      │  Execute    │
-                      │  Commands   │
-                      └──────┬──────┘
-                             │
-                     ┌───────▼───────┐
-                     │   Success?    │
-                     └────┬────┬─────┘
-                          │    │
-                       Yes│    │No
-                          ▼    ▼
-                  ┌──────────────┐
-                  │    Retry     │
-                  │ (Backoff)    │
-                  └──────┬───────┘
-                         │
-                ┌────────▼────────┐
-                │ Max retries?    │
-                └───┬─────┬───────┘
-                    │     │
-                  No│     │Yes
-                    ▼     ▼
-          ┌──────────┐ ┌──────────┐ ┌─────┐
-          │Completed │ │  Failed  │ │ DLQ │
-          └──────────┘ └──────────┘ └─────┘
+                     ┌────────▼────────┐
+                     │ Max retries?    │
+                     └───┬─────┬───────┘
+                         │     │
+                       No│     │Yes
+                         ▼     ▼
+               ┌──────────┐ ┌──────────┐ ┌─────┐
+               │Completed │ │  Failed  │ │ DLQ │
+               └──────────┘ └──────────┘ └─────┘
+
 
 ## Setup
 
